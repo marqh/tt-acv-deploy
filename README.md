@@ -1,4 +1,3 @@
-# Registry core
 
 This provides an implemention of the Linked Data Registry originally developed under ukl-registry-poc.
 
