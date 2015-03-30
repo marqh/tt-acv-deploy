@@ -15,7 +15,7 @@
 
 @prefix reg:  <http://purl.org/linked-data/registry#> .
 
-@base <http://> .
+@base <http://ontology.geodab.eu> .
 
 <> a reg:Register;
     version:currentVersion <>;
