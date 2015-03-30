@@ -1,5 +1,5 @@
 Name:		registry-core-tt-acv
-Version:	0.0.5
+Version:	0.1
 Release:	1
 Summary:	TT ACV linked data registry
 
@@ -30,23 +30,27 @@ mkdir -p $RPM_BUILD_ROOT/var/log/ldregistry
 install -D var/lib/tomcat7/webapps/ROOT.war $RPM_BUILD_ROOT/var/lib/tomcat7/webapps/ROOT.war
 
 %pre
-
-service tomcat7 stop
-for f in $(find /opt/ldregistry -type f)
-do
-  owner=$(rpm -qf $f)
-  if [ $? -eq 1 ]; then
-    rm $f
-  fi
-done
+SERVICE='tomcat'#7
+if ps ax | grep -v grep | grep $SERVICE > /dev/null
+then
+    service tomcat7 stop
+fi
 alternatives --set java /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/bin/java
 
 
 %post
-
 service tomcat7 start
 
+%preun
+SERVICE='tomcat'#7
+if ps ax | grep -v grep | grep $SERVICE > /dev/null
+then
+    service tomcat7 stop
+fi
 
+%postun
+rm -rf /opt/ldregistry
+rm -rf /var/lib/tomcat7/webapps/ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,7 +59,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 /etc/sudoers.d/uklSudoers.conf
-%defattr(775,root,tomcat,-)
+%defattr(775,root,tomcat,775)
 /var/lib/tomcat7/webapps/ROOT.war
 %dir /opt/ldregistry
 %dir /opt/ldregistry/ui
@@ -64,3 +68,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+Friday Mar 27 2015 markh <markh@metarelate.net> - 0.1-1
+- Initial version
