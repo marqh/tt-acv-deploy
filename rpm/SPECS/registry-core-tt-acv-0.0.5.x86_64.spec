@@ -68,5 +68,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-Friday Mar 27 2015 markh <markh@metarelate.net> - 0.1-1
+* Fri Mar 27 2015 markh <markh@metarelate.net> - 0.1-1
 - Initial version
