@@ -1,6 +1,6 @@
 Name:		registry-core-tt-acv
 Version:	0.1
-Release:	1
+Release:	12
 Summary:	TT ACV linked data registry
 
 License:	apache
@@ -25,6 +25,7 @@ Requires:       tomcat7
 rm -rf $RPM_BUILD_ROOT
 install -D etc/sudoers.d/uklSudoers.conf $RPM_BUILD_ROOT/etc/sudoers.d/uklSudoers.conf
 mkdir -p $RPM_BUILD_ROOT/opt/ldregistry/ui
+mkdir -p $RPM_BUILD_ROOT/opt/ldregistry/config
 mkdir -p $RPM_BUILD_ROOT/var/opt/ldregistry
 mkdir -p $RPM_BUILD_ROOT/var/log/ldregistry
 install -D var/lib/tomcat7/webapps/ROOT.war $RPM_BUILD_ROOT/var/lib/tomcat7/webapps/ROOT.war
@@ -36,21 +37,15 @@ then
     service tomcat7 stop
 fi
 alternatives --set java /usr/lib/jvm/jre-1.7.0-openjdk.x86_64/bin/java
-
+rm -rf /var/lib/tomcat7/webapps/ROOT
+rm -rf /var/lib/tomcat7/webapps/ROOT.war
+rm -rf /opt/ldregistry
+rm -rf /var/opt/ldregistry/userstore/db.lck
+rm -rf /var/opt/ldregistry/userstore/dbex.lck
 
 %post
+ln -s /opt/tt-acv/oauth.conf /opt/ldregistry/config/oauth.conf
 service tomcat7 start
-
-%preun
-SERVICE='tomcat'#7
-if ps ax | grep -v grep | grep $SERVICE > /dev/null
-then
-    service tomcat7 stop
-fi
-
-%postun
-rm -rf /opt/ldregistry
-rm -rf /var/lib/tomcat7/webapps/ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -63,6 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 /var/lib/tomcat7/webapps/ROOT.war
 %dir /opt/ldregistry
 %dir /opt/ldregistry/ui
+%dir /opt/ldregistry/config
 %dir /var/opt/ldregistry
 %dir /var/log/ldregistry
 
